@@ -1,0 +1,90 @@
+version: '3.8'
+services:
+    db:
+        image: mysql:8.0.28
+        command: mysqld --sql_mode="" --default-authentication-plugin=mysql_native_password
+        volumes:
+            - ./nodeDb:/var/lib/mysql
+        ports:
+            - '8005:3306'
+        environment:
+            MYSQL_DATABASE: sample
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_USER: root
+            MYSQL_PASSWORD: root
+
+
+    phpmyadmin:
+        image: phpmyadmin:latest
+        ports:
+            - "7000:80"
+        depends_on:
+            - db
+        environment:
+            - PMA_HOST=db
+
+
+    user_backend:
+        image: node:0.2
+        depends_on:
+            - db
+        ports:
+            - 5000:5000
+        volumes:
+            - ./src:/app/src
+            - ./.env:/app/.env
+
+
+
+
+# version: '3.7'
+# services:
+    # db:
+    #     image: mysql:8.0.28
+    #     command: mysqld --sql_mode="" --default-authentication-plugin=mysql_native_password
+    #     volumes:
+    #         - ./database:/var/lib/mysql
+
+    #     ports:
+    #         - '8001:3306'
+    #     environment:
+    #         MYSQL_DATABASE: mlm_laravel
+    #         MYSQL_ROOT_PASSWORD: rooPasswrd
+    #         MYSQL_USER: user
+    #         MYSQL_PASSWORD: uspasswrd
+
+       # user_backend:
+    #     image: node-project:latest
+    #     depends_on:
+    #         - db
+    #     ports:
+    #         - 3000:5000
+    #     volumes:
+    #         - ./src:/app/src
+
+    # phpmyadmin:
+    #     image: phpmyadmin:latest
+    #     ports:
+    #         - "7000:80"
+    #     depends_on:
+    #         - db
+    #     environment:
+    #         - PMA_HOST=db
+
+    # db:
+    # image: mysql:8.0.28
+    # command: --default-authentication-plugin=mysql_native_password
+    # restart: always
+    # environment:
+    #   MYSQL_ROOT_PASSWORD: root
+    #   MYSQL_DATABASE: Sample
+    #   MYSQL_USER: root
+    #   MYSQL_PASSWORD: root
+    # volumes:
+    #   - ./database:/var/lib/mysql
+    # ports:
+    #   - '3306:3306'
+
+ 
+            
+
